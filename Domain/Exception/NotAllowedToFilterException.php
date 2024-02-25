@@ -2,7 +2,7 @@
 
 namespace Domain\Exception;
 
-use Domain\Factory\ReportFactoryInterface;
+use Domain\Provider\ReportProviderInterface;
 
 class NotAllowedToFilterException extends DomainException
 {
@@ -13,7 +13,7 @@ class NotAllowedToFilterException extends DomainException
             sprintf(
                 'Not allowed to filter by: %s. Fields allowed to filter: %s.',
                 $fieldName,
-                implode(',', ReportFactoryInterface::FIELDS_ALLOWED_TO_FILTER),
+                implode(',', ReportProviderInterface::FIELDS_ALLOWED_TO_FILTER),
             )
         );
     }

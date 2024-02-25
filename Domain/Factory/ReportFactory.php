@@ -10,7 +10,6 @@ use Domain\Repository\EmployeeRepositoryInterface;
 class ReportFactory implements ReportFactoryInterface
 {
     public function __construct(
-        private EmployeeRepositoryInterface $employeeRepository,
         private BonusCalculatorInterface $bonusCalculator
     ) {}
 
