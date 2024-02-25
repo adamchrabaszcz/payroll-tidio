@@ -3,9 +3,13 @@
 namespace Domain\Repository;
 
 use Domain\Model\Employee;
-use Symfony\Component\Uid\UuidV4;
 
 interface EmployeeRepositoryInterface
 {
-    public function getById(UuidV4 $id): Employee;
+    /**
+     * @param array $filterBy
+     * @param array $sortBy
+     * @return Employee[]|null
+     */
+    public function getAllBy(array $filterBy = [], array $sortBy = []): ?array;
 }

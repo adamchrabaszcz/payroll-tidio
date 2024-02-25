@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Doctrine\Transformer\EmployeeTransformer;
 use App\Entity\Employee;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Domain\Repository\EmployeeRepositoryInterface;
 
 /**
  * @extends ServiceEntityRepository<Employee>
@@ -14,35 +16,51 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Employee[]    findAll()
  * @method Employee[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EmployeeRepository extends ServiceEntityRepository
+class EmployeeRepository extends ServiceEntityRepository implements EmployeeRepositoryInterface
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    private EmployeeTransformer $employeeTransformer;
+
+    public function __construct(
+        ManagerRegistry $registry,
+        EmployeeTransformer $employeeTransformer
+    ){
         parent::__construct($registry, Employee::class);
+        $this->employeeTransformer = $employeeTransformer;
     }
 
-    //    /**
-    //     * @return Employee[] Returns an array of Employee objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('e.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function getAllBy(array $filterBy = [], array $sortBy = []): ?array
+    {
+        $qb = $this->createQueryBuilder('e');
+        $qb->join('e.department', 'department');
 
-    //    public function findOneBySomeField($value): ?Employee
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+        if (isset($filterBy['field']) && isset($filterBy['value'])) {
+            if ('departmentName' == $filterBy['field']) {
+                $qb->andWhere('department.name LIKE :val');
+            } elseif ('bonusType' == $filterBy['field']) {
+                $qb->andWhere('department.bonusType = :val');
+            } else {
+                $qb->andWhere(sprintf('LOWER(e.%s) LIKE LOWER(:val)', $filterBy['field']));
+            }
+            $qb->setParameter('val', '%' . addcslashes($filterBy['value'], '%_') . '%');
+        }
+
+        if (isset($sortBy['field']) && isset($sortBy['direction'])) {
+            if ('departmentName' == $sortBy['field']) {
+                $qb->orderBy('department.name', $sortBy['direction']);
+            } elseif ('bonusType' == $sortBy['field']) {
+                $qb->orderBy('department.departmentBonus.bonusType', $sortBy['direction']);
+            } else {
+                $qb->orderBy(sprintf('LOWER(e.%s)', $sortBy['field']), $sortBy['direction']);
+            }
+        }
+
+        $entityResults = $qb->getQuery()->getResult();
+
+        $domainResults = [];
+        foreach ($entityResults as $entity) {
+            $domainResults[] = $this->employeeTransformer->entityToDomain($entity);
+        }
+
+        return $domainResults;
+    }
 }

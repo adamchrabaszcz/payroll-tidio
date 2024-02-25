@@ -20,7 +20,7 @@ class Employee
     #[ORM\Column]
     private int $baseSalary;
 
-    #[ORM\Column]
+    #[ORM\Column(type: "date")]
     private \DateTimeInterface $startedWorkAt;
 
     #[ORM\ManyToOne(inversedBy: 'employees')]
