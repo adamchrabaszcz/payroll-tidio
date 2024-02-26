@@ -65,6 +65,14 @@ class CreateEmployeeCommand extends Command
         $baseSalary = $io->askQuestion($question);
 
         $question = new Question('Started work at (YYYY-MM-DD)');
+        $question->setValidator(function ($answer) {
+            $date = \DateTime::createFromFormat('Y-m-d', $answer);
+            if (! $date || $date->format('Y-m-d') != $answer) {
+                throw new \RuntimeException(sprintf('Please enter the date in a YYYY-MM-DD format. Entered %s', $answer));
+            }
+
+            return $answer;
+        });
         $dateString = $io->askQuestion($question);
         $startedWorkAt = \DateTime::createFromFormat('Y-m-d', $dateString);
 
