@@ -1,4 +1,6 @@
 # How to setup
+1. Clone repository `git clone https://github.com/adamchrabaszcz/payroll-tidio.git`
+1. Install dependencies `composer install` 
 1. Launch docker with `docker-compose up --build`
 1. Enter docker php container
 1. Launch migrations `bin/console doctrine:migrations:migrate`
