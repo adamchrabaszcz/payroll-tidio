@@ -43,9 +43,11 @@ class PayrollReportCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $io->title('Payroll Report.');
+        $io->title(sprintf('Payroll Report for %s.', date('F')));
 
-        $month = $io->choice(
+        // For future use - might be worth asking for the month of the Report.
+        //Some additional logic needed for edge cases.
+        /*$month = $io->choice(
             'Please select month',
             array_combine(
                 range(1,12),
@@ -55,7 +57,10 @@ class PayrollReportCommand extends Command
                 )
             ),
             date('n')
-        );
+        );*/
+
+        $this->printReportTable($output, [], []);
+        $io->newLine();
 
         $filterBy = [];
         $filterByField = $io->choice(
@@ -95,6 +100,20 @@ class PayrollReportCommand extends Command
             ];
         }
 
+        $this->printReportTable($output, $filterBy, $sortBy);
+
+        return Command::SUCCESS;
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param array $filterBy
+     * @param array $sortBy
+     * @return void
+     * @throws NotAllowedToFilterException
+     */
+    private function printReportTable(OutputInterface $output, array $filterBy, array $sortBy): void
+    {
         $table = new Table($output);
         $table
             ->setHeaders([
@@ -105,17 +124,14 @@ class PayrollReportCommand extends Command
                 'Addition to the base (amount)',
                 'Bonus type (% or fixed type)',
                 'Salary with bonus (amount)'
-            ])
-        ;
+            ]);
 
-        $report = $this->reportProvider->provideReportForMonth($month, $filterBy, $sortBy);
+        $report = $this->reportProvider->provideReportForMonth(date('n'), $filterBy, $sortBy);
 
         foreach ($report->getReportRows() as $reportRow) {
             $table->addRow($reportRow->getRow());
         }
 
         $table->render();
-
-        return Command::SUCCESS;
     }
 }
