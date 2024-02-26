@@ -45,20 +45,6 @@ class PayrollReportCommand extends Command
 
         $io->title(sprintf('Payroll Report for %s.', date('F')));
 
-        // For future use - might be worth asking for the month of the Report.
-        //Some additional logic needed for edge cases.
-        /*$month = $io->choice(
-            'Please select month',
-            array_combine(
-                range(1,12),
-                array_map(
-                    fn($x) => \DateTime::createFromFormat('!m', $x)->format('F'),
-                    range(1,12)
-                )
-            ),
-            date('n')
-        );*/
-
         $this->printReportTable($output, [], []);
         $io->newLine();
 
