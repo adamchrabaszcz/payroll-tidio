@@ -11,6 +11,6 @@
 1. Generate Payroll Report `bin/console app:payroll-report`
 
 # Launch tests
-1. Unit tests `bin/phpunit --stop-on-failure --testdox -v`
+1. Unit tests `bin/phpunit --stop-on-failure --testdox -v tests`
 
 # Enjoy!
