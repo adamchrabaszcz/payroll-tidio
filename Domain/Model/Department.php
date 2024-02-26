@@ -3,12 +3,12 @@
 namespace Domain\Model;
 
 use Domain\Common\Traits\UuidTrait;
+use Domain\Model\Traits\NameTrait;
 
 class Department
 {
     use UuidTrait;
-
-    private string $name;
+    use NameTrait;
 
     /**
      * @var Employee[]
@@ -16,16 +16,6 @@ class Department
     private array $employees;
 
     private DepartmentBonus $departmentBonus;
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): void
-    {
-        $this->name = $name;
-    }
 
     public function getEmployees(): array
     {

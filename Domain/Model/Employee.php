@@ -3,36 +3,19 @@
 namespace Domain\Model;
 
 use Domain\Common\Traits\UuidTrait;
+use Domain\Model\Traits\BaseSalaryTrait;
+use Domain\Model\Traits\FirstNameTrait;
+use Domain\Model\Traits\LastNameTrait;
 
 class Employee
 {
     use UuidTrait;
+    use FirstNameTrait;
+    use LastNameTrait;
+    use BaseSalaryTrait;
 
-    private string $firstName;
-    private string $lastName;
     private \DateTimeInterface $startedWorkAt;
-    private int $baseSalary;
     private Department $department;
-
-    public function getFirstName(): string
-    {
-        return $this->firstName;
-    }
-
-    public function setFirstName(string $firstName): void
-    {
-        $this->firstName = $firstName;
-    }
-
-    public function getLastName(): string
-    {
-        return $this->lastName;
-    }
-
-    public function setLastName(string $lastName): void
-    {
-        $this->lastName = $lastName;
-    }
 
     public function getDepartment(): Department
     {
@@ -52,16 +35,6 @@ class Employee
     public function setStartedWorkAt(\DateTimeInterface $startedWorkAt): void
     {
         $this->startedWorkAt = $startedWorkAt;
-    }
-
-    public function getBaseSalary(): int
-    {
-        return $this->baseSalary;
-    }
-
-    public function setBaseSalary(int $baseSalary): void
-    {
-        $this->baseSalary = $baseSalary;
     }
 
     public function getYearsOfWork(): int

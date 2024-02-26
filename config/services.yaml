@@ -22,3 +22,18 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    # Domain services
+    Domain\Factory\ReportFactory: ~
+    Domain\Factory\ReportFactoryInterface: '@Domain\Factory\ReportFactory'
+
+    Domain\Calculator\BonusCalculator: ~
+    Domain\Calculator\BonusCalculatorInterface: '@Domain\Calculator\BonusCalculator'
+
+    Domain\Strategy\BonusStrategySelector: ~
+    Domain\Strategy\BonusStrategySelectorInterface: '@Domain\Strategy\BonusStrategySelector'
+
+    Domain\Repository\EmployeeRepositoryInterface: '@App\Repository\EmployeeRepository'
+
+    Domain\Provider\ReportProvider: ~
+    Domain\Provider\ReportProviderInterface: '@Domain\Provider\ReportProvider'
